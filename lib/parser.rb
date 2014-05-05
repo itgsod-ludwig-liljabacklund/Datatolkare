@@ -51,4 +51,49 @@
 #end
 #
 ##main("../spec/test.dat")
+def main(input)
+  hashes = []
+  rows = load_weather_file(input)
+  rows.each do |object|
+    result = split_line(object)
+    hashes << encode_line(result)
+  end
+  hash = find_biggest_variation(hashes)
+  puts "Day #{hash[:date]} had the biggest variation (#{hash[:max] - hash[:min]} degrees)"
+end
 
+def split_line(input)
+  raise ArgumentError, "can not parse empty line" if input == ""
+  output = input.split(" ")
+  return output
+end
+
+def encode_line(input)
+  raise ArgumentError, "incomplete array" if input.length < 3
+  hash = {:date => input[0].to_i, :max => input[1].to_i, :min => input[2].to_i}
+  return hash
+end
+
+def find_biggest_variation(input)
+  raise ArgumentError, "array must not be empty" if input == []
+  difference = 0
+  i = 0
+  input.each_with_index do |hash, index|
+    if hash[:max] - hash[:min] > difference
+      difference = hash[:max] - hash[:min]
+      i = index
+    end
+  end
+  return input[i]
+end
+
+def load_weather_file(input)
+  raise ArgumentError if input == ""
+  raise ArgumentError, "path must not be empty" if input == "''"
+  raise IOError, "file does not exist" unless File.exist?(input)
+  f = File.readlines(input)
+  f = f.drop(2)
+  return f
+end
+
+p main('../weather.dat')
