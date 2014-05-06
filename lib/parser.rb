@@ -59,7 +59,7 @@ def main(input)
     hashes << encode_line(result)
   end
   hash = find_biggest_variation(hashes)
-  puts "Day #{hash[:date]} had the biggest variation (#{hash[:max] - hash[:min]} degrees)"
+  puts "Day #{hash[:date]} had the biggest variation (#{(hash[:max] - hash[:min]).to_f} degrees)"
 end
 
 def split_line(input)
@@ -88,12 +88,9 @@ def find_biggest_variation(input)
 end
 
 def load_weather_file(input)
-  raise ArgumentError if input == ""
-  raise ArgumentError, "path must not be empty" if input == "''"
+  raise ArgumentError, "path must not be empty" if input == ""
   raise IOError, "file does not exist" unless File.exist?(input)
   f = File.readlines(input)
   f = f.drop(2)
   return f
 end
-
-p main('../weather.dat')
